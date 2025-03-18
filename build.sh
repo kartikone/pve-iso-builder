@@ -2,7 +2,7 @@
 #proxmox arm64 iso builder
 script_path=$(readlink -f "\$0")
 script_dir=$(dirname "$script_path")
-extra_pkg="ceph-common ceph-fuse iperf3"  #if you want install other package
+extra_pkg="ceph-common ceph-fuse iperf3 net-sriov-tools"  #if you want install other package
 hostarch=`arch`     # This scripts only allow the same arch build.
 codename="bookworm"  # proxmox version. bookworm->pve8 ,bullseye->pve7
 targetdir="/tmp/targetdir" # tmpdir
