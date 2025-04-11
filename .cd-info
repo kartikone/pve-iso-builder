@@ -8,3 +8,4 @@ extra_kernel=""
 mirrors="https://mirrors.ustc.edu.cn" #debian mirror
 pvemirrors="https://mirrors.ustc.edu.cn/proxmox/debian" #pve mirrors.
 portmirrors="https://download.lierfang.com/pxcloud" #port mirrors
+ceph=""

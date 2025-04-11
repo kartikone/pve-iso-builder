@@ -236,6 +236,15 @@ create_pkg(){
     if [ ! -f  "$targetdir/.package.lock" ];then
     curl -L https://mirrors.lierfang.com/proxmox/debian/pveport.gpg -o $targetdir/rootfs/etc/apt/trusted.gpg.d/pveport.gpg ||errlog "download apt key failed"
     echo "deb $portmirrors/$PRODUCT $codename main" > $targetdir/rootfs/etc/apt/sources.list.d/pveport.list  ||errlog "create apt mirrors failed"
+    if [ ! -z "$ceph" ];then
+    	if [ "$ceph"  == "reef" ] || [ "$ceph"  == "squid" ] || [ "$ceph"  == "quincy" ];then
+	    echo "add ceph mirror"
+	    echo "deb $portmirrors/$PRODUCT $codename ceph-$ceph" >> $targetdir/rootfs/etc/apt/sources.list.d/pveport.list  ||errlog "create apt mirrors failed"
+	    ceph="ceph"
+	else
+	    ceph=""
+	fi
+    fi
     chroot $targetdir/rootfs apt clean
     rm -rf $targetdir/rootfs/var/cache/apt/archives/
     chroot $targetdir/rootfs apt update ||errlog "do apt update failed"
@@ -250,7 +259,7 @@ create_pkg(){
         main_pkg=`cat proxmox/$PRODUCT-packages.list.line`
     fi
 
-    chroot $targetdir/rootfs apt --download-only install -y  $main_pkg  $main_kernel $extra_kernel postfix squashfs-tools traceroute net-tools pci.ids pciutils efibootmgr xfsprogs fonts-liberation dnsutils $extra_pkg $grub_pkg gettext-base sosreport ethtool dmeventd eject chrony locales locales-all systemd rsyslog ifupdown2 ksmtuned zfsutils-linux zfs-zed spl btrfs-progs gdisk bash-completion zfs-initramfs dosfstools||errlog "download proxmox-ve package failed"
+    chroot $targetdir/rootfs apt --download-only install -y  $ceph  $main_pkg  $main_kernel $extra_kernel postfix squashfs-tools traceroute net-tools pci.ids pciutils efibootmgr xfsprogs fonts-liberation dnsutils $extra_pkg $grub_pkg gettext-base sosreport ethtool dmeventd eject chrony locales locales-all systemd rsyslog ifupdown2 ksmtuned zfsutils-linux zfs-zed spl btrfs-progs gdisk bash-completion zfs-initramfs dosfstools||errlog "download proxmox-ve package failed"
 
     mkdir $targetdir/iso/proxmox/packages/ -p
     cp -r $targetdir/rootfs/var/cache/apt/archives/*.deb $targetdir/iso/proxmox/packages/  ||errlog "do copy pkg failed"
