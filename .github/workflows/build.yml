@@ -12,5 +12,11 @@ jobs:
           fetch-depth: 0
       - name: Run bash script
         run: | 
-          sudo apt install debootstrap squashfs-tools  xorriso -y
-          sudo bash build.sh clean 
+          sudo apt install debootstrap squashfs-tools xorriso -y
+          sudo bash build.sh clean
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v4
+        with:
+          name: Proxmox ISO
+          path: /tmp/tempdir/proxmox*.iso
+
