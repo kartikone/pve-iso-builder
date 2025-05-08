@@ -11,4 +11,6 @@ jobs:
         with:
           fetch-depth: 0
       - name: Run bash script
-        run: apt install debootstrap squashfs-tools  xorriso -y && bash build.sh clean 
+        run: | 
+          sudo apt install debootstrap squashfs-tools  xorriso -y
+          sudo bash build.sh clean 
